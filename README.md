@@ -26,6 +26,13 @@ Enter browser localhost:3000
 ![alt text](image-3.png)
 
 # Backend test
+cd into UBackend
+
+```
+2. To run 
+```
+npm i
+npm run dev
 
 ## 1. Register a New User
 

@@ -2,16 +2,15 @@
 
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import { useAuth } from "../context/AuthContext"
+import { useAuth } from "./AuthContext"
 
 export default function Signup() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
   const [passwordError, setPasswordError] = useState("")
-  const [loading, setLoading] = useState(false)
 
-  const { signup, error } = useAuth()
+  const { signup, error, loading } = useAuth()
   const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
@@ -23,17 +22,14 @@ export default function Signup() {
     }
 
     setPasswordError("")
-    setLoading(true)
-
+    
     try {
-      const success = await signup(email, password) // Ensure `signup` is async
+      const success = await signup(email, password)
       if (success) {
         navigate("/dashboard")
       }
     } catch (err) {
-      console.error("Signup failed:", err)
-    } finally {
-      setLoading(false)
+      // Errors are handled in AuthContext
     }
   }
 
@@ -63,6 +59,7 @@ export default function Signup() {
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
               required
+              autoComplete="email"
             />
           </div>
 
@@ -77,6 +74,7 @@ export default function Signup() {
               onChange={(e) => setPassword(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
               required
+              autoComplete="new-password"
             />
           </div>
 
@@ -91,6 +89,7 @@ export default function Signup() {
               onChange={(e) => setConfirmPassword(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
               required
+              autoComplete="new-password"
             />
             {passwordError && <p className="mt-1 text-sm text-red-600">{passwordError}</p>}
           </div>

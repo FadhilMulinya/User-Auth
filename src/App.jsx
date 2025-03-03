@@ -1,41 +1,42 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom"
-import { AuthProvider, useAuth } from "./context/AuthContext"
+import { AuthProvider, useAuth } from "./pages/AuthContext" 
 import Login from "./pages/Login"
 import Signup from "./pages/Signup"
 import Dashboard from "./pages/Dashboard"
 
-// Protected route component
+// Enhanced ProtectedRoute component
 const ProtectedRoute = ({ children }) => {
-  const { user } = useAuth()
+  const { user, loading } = useAuth()
 
-  if (!user) {
-    return <Navigate to="/login" />
+  if (loading) {
+    return <div className="min-h-screen flex items-center justify-center">Loading...</div>
   }
 
-  return children
+  return user ? children : <Navigate to="/login" replace />
 }
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
+    <Router>
+      <AuthProvider>
         <Routes>
+          <Route path="/" element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          } />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="*" element={<Navigate to="/login" />} />
+          <Route path="/dashboard" element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          } />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
-      </Router>
-    </AuthProvider>
+      </AuthProvider>
+    </Router>
   )
 }
 
 export default App
-

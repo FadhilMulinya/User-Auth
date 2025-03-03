@@ -2,35 +2,32 @@
 
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import { useAuth } from "../context/AuthContext"
+import { useAuth } from "./AuthContext"
 
 export default function Login() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [loading, setLoading] = useState(false)
-  const { login, error } = useAuth()
+  
+  const { login, error, loading } = useAuth()
   const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    setLoading(true)
     try {
       const success = await login(email, password)
       if (success) {
         navigate("/dashboard")
       }
     } catch (err) {
-      console.error("Login failed:", err)
-    } finally {
-      setLoading(false)
+      // Errors are handled in AuthContext
     }
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-white rounded-xl shadow-sm p-8">
+    <div className="min-h-screen bg-white flex items-center justify-center p-4">
+      <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8">
         <div className="text-center mb-6">
-          <h1 className="text-2xl font-semibold text-gray-900">Login</h1>
+          <h1 className="text-3xl font-bold text-gray-900">Login</h1>
           <p className="text-gray-600 mt-1">Sign in to your account</p>
         </div>
 
@@ -52,6 +49,7 @@ export default function Login() {
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
               required
+              autoComplete="email"
             />
           </div>
 
@@ -66,6 +64,7 @@ export default function Login() {
               onChange={(e) => setPassword(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
               required
+              autoComplete="current-password"
             />
           </div>
 
